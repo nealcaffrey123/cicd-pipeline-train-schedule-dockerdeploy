@@ -8,5 +8,18 @@ pipeline {
                 archiveArtifacts artifacts: 'dist/trainSchedule.zip'
             }
         }
+        stage('Build docker image'){
+                sh 'docker build -t nlsaiteja/trainschedule:1.0 .'
+        }
+        stage('Push Docker Image'){
+                sh 'docker push nlsaiteja/trainschedule:1.0'
+        }
+        stage('Deploy'){
+                sh 'ssh cloud_user@52.226.90.27'
+                sh 'sleep 10'
+                sh 'docker pull nlsaiteja/trainschedule:1.0'
+                sh 'docker run nlsaiteja/trainschedule:1.0'
+        }
+            
     }
 }
